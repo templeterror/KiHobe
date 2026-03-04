@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/use-auth";
+import { KiHobeLogo } from "@/components/kihobe-logo";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -51,7 +52,7 @@ export default function LoginPage() {
         className="w-full max-w-sm"
       >
         <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold">KiHobe</h1>
+          <KiHobeLogo height={40} />
           <p className="text-muted-foreground text-sm mt-1">Sign in with your phone number</p>
         </div>
 

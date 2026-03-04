@@ -72,7 +72,7 @@ export default function LeaderboardPage() {
                   <div className="text-sm font-medium truncate">{entry.display_name ?? "Anonymous"}</div>
                   <div className="text-xs text-muted-foreground">{entry.correct_predictions} correct · {entry.win_rate}% rate</div>
                 </div>
-                {entry.prizes_won > 0 && <span className="text-xs">🏆 ×{entry.prizes_won}</span>}
+                {entry.prizes_won > 0 && <span className="text-xs">{entry.prizes_won} wins</span>}
               </div>
             ))}
             {data.length === 0 && <p className="text-center text-muted-foreground text-sm py-8">No data yet.</p>}

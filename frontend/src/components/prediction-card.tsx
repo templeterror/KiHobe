@@ -26,10 +26,10 @@ export function PredictionCard({ prediction, index = 0 }: PredictionCardProps) {
       transition={{ duration: 0.2, delay: index * 0.04 }}
     >
       <Link href={`/prediction/${prediction.id}`}>
-        <div className="group bg-[#111111] border border-white/8 rounded-xl p-4 hover:border-[#ff5f05]/40 hover:bg-[#161616] transition-all cursor-pointer">
+        <div className="group bg-[#111111] border border-white/8 rounded-xl p-4 hover:border-[#FFBA08]/40 hover:bg-[#161616] transition-all cursor-pointer">
 
           {/* Title */}
-          <h3 className="text-sm font-semibold text-white leading-snug mb-3 line-clamp-2 group-hover:text-[#ff5f05] transition-colors">
+          <h3 className="text-sm font-semibold text-white leading-snug mb-3 line-clamp-2 group-hover:text-[#FFBA08] transition-colors">
             {prediction.title}
           </h3>
 
@@ -88,7 +88,7 @@ export function PredictionCard({ prediction, index = 0 }: PredictionCardProps) {
           <div className="flex items-center justify-between text-xs text-[#e0e0e0]/60 mt-3">
             <span>{total.toLocaleString()} votes</span>
             {prediction.prize_description && (
-              <span className="text-[#ff5f05]">🏆 {prediction.prize_description}</span>
+              <span className="text-[#FFBA08]">{prediction.prize_description}</span>
             )}
           </div>
 

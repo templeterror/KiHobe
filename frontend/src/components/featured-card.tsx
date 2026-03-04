@@ -39,7 +39,7 @@ function MiniChart({ predictionId, prediction }: { predictionId: string; predict
         layout: {
           background: { type: ColorType.Solid, color: "transparent" },
           textColor: "rgba(255,255,255,0.3)",
-          fontFamily: "'Inter', system-ui, sans-serif",
+          fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
           fontSize: 10,
         },
         grid: {
@@ -224,7 +224,7 @@ export function FeaturedCard({ prediction, index, total, onPrev, onNext }: Featu
       {/* Top bar */}
       <div className="flex items-start justify-between gap-4 p-5 pb-4">
         <Link href={`/prediction/${prediction.id}`}>
-          <h2 className="text-lg font-semibold text-white leading-snug hover:text-[#ff5f05] transition-colors cursor-pointer">
+          <h2 className="text-lg font-semibold text-white leading-snug hover:text-[#FFBA08] transition-colors cursor-pointer">
             {prediction.title}
           </h2>
         </Link>

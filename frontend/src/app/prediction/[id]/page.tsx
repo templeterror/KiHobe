@@ -28,7 +28,7 @@ export default function PredictionPage({ params }: { params: Promise<{ id: strin
   if (loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="animate-spin h-7 w-7 border-2 rounded-full" style={{ borderColor: "#ff5f05", borderTopColor: "transparent" }} />
+        <div className="animate-spin h-7 w-7 border-2 rounded-full" style={{ borderColor: "#FFBA08", borderTopColor: "transparent" }} />
       </div>
     );
   }
@@ -169,7 +169,7 @@ export default function PredictionPage({ params }: { params: Promise<{ id: strin
             {prediction.prize_description && (
               <div className="flex justify-between">
                 <span className="text-[#e0e0e0]">Prize</span>
-                <span className="text-white font-medium">🏆 {prediction.prize_description}</span>
+                <span className="text-white font-medium">{prediction.prize_description}</span>
               </div>
             )}
           </div>

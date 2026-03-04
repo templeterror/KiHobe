@@ -18,9 +18,10 @@ interface ChartProps {
   height?: number;
   predictionType?: "binary" | "multi_choice";
   choices?: PredictionChoice[] | null;
+  lineColor?: string;
 }
 
-export function PredictionChart({ data, height = 220, predictionType = "binary", choices }: ChartProps) {
+export function PredictionChart({ data, height = 220, predictionType = "binary", choices, lineColor = "#eab308" }: ChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,14 +32,14 @@ export function PredictionChart({ data, height = 220, predictionType = "binary",
     import("lightweight-charts").then(({ createChart, ColorType, AreaSeries, LineSeries, LineStyle }) => {
       if (!containerRef.current) return;
 
-      const crosshairColor = predictionType === "multi_choice" ? "rgba(255,255,255,0.2)" : "rgba(10,194,133,0.3)";
-      const crosshairLabel = predictionType === "multi_choice" ? "#333" : "#0ac285";
+      const crosshairColor = predictionType === "multi_choice" ? "rgba(255,255,255,0.2)" : `${lineColor}4d`;
+      const crosshairLabel = predictionType === "multi_choice" ? "#333" : lineColor;
 
       chart = createChart(containerRef.current, {
         layout: {
           background: { type: ColorType.Solid, color: "transparent" },
           textColor: "rgba(255,255,255,0.35)",
-          fontFamily: "'Inter', system-ui, sans-serif",
+          fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
           fontSize: 11,
         },
         grid: {
@@ -145,17 +146,17 @@ export function PredictionChart({ data, height = 220, predictionType = "binary",
       } else {
         // ── Binary: single AreaSeries for YES probability ──
         const series = chart.addSeries(AreaSeries, {
-          lineColor: "#0ac285",
-          topColor: "rgba(10,194,133,0.0)",
-          bottomColor: "rgba(10,194,133,0.0)",
+          lineColor,
+          topColor: "rgba(0,0,0,0)",
+          bottomColor: "rgba(0,0,0,0)",
           lineWidth: 2,
           priceFormat: {
             type: "custom",
             formatter: (price: number) => `${Math.round(price)}%`,
           },
           crosshairMarkerRadius: 4,
-          crosshairMarkerBackgroundColor: "#0ac285",
-          crosshairMarkerBorderColor: "#0ac285",
+          crosshairMarkerBackgroundColor: lineColor,
+          crosshairMarkerBorderColor: lineColor,
           lastValueVisible: false,
           priceLineVisible: false,
         });
@@ -200,8 +201,12 @@ export function PredictionChart({ data, height = 220, predictionType = "binary",
               ease: "power1.in",
               onUpdate() {
                 const o = this.targets()[0].opacity;
+                // parse lineColor hex → rgb for area fill
+                const r = parseInt(lineColor.slice(1, 3), 16);
+                const g = parseInt(lineColor.slice(3, 5), 16);
+                const b = parseInt(lineColor.slice(5, 7), 16);
                 series.applyOptions({
-                  topColor: `rgba(10,194,133,${0.12 * o})`,
+                  topColor: `rgba(${r},${g},${b},${0.12 * o})`,
                 });
               },
             });
@@ -228,7 +233,7 @@ export function PredictionChart({ data, height = 220, predictionType = "binary",
       ro.disconnect();
       chart?.remove();
     };
-  }, [data, height, predictionType, choices]);
+  }, [data, height, predictionType, choices, lineColor]);
 
   return <div ref={containerRef} className="w-full" />;
 }

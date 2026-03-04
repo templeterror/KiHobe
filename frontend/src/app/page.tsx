@@ -8,6 +8,7 @@ import { PredictionCard } from "@/components/prediction-card";
 import { FeaturedCard } from "@/components/featured-card";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { KiHobeLogo } from "@/components/kihobe-logo";
 
 const CATEGORIES = [
   { key: "all", label: "All" },
@@ -35,15 +36,15 @@ export default function HomePage() {
     <div className="min-h-screen bg-black">
       {/* Header */}
       <header className="sticky top-0 z-20 bg-black/95 backdrop-blur border-b border-white/8 px-4 md:px-6 py-3 flex items-center justify-between">
-        <span className="text-lg font-semibold" style={{ color: "#ff5f05" }}>KiHobe</span>
+        <KiHobeLogo height={28} />
         <nav className="flex items-center gap-3">
           <Link href="/leaderboard" className="text-sm text-[#e0e0e0] hover:text-white transition-colors font-medium">
             Ranks
           </Link>
           <Link
             href="/login"
-            className="text-sm px-3 py-1.5 rounded-lg font-semibold text-white transition-opacity hover:opacity-90"
-            style={{ backgroundColor: "#ff5f05" }}
+            className="text-sm px-3 py-1.5 rounded-lg font-semibold text-[#0A0C0F] transition-opacity hover:opacity-90"
+            style={{ backgroundColor: "#FFBA08" }}
           >
             Login
           </Link>
@@ -58,14 +59,14 @@ export default function HomePage() {
               key={cat.key}
               onClick={() => { setActiveCategory(cat.key); setFeaturedIndex(0); }}
               className="relative shrink-0 px-4 py-3 text-sm font-medium transition-colors"
-              style={{ color: activeCategory === cat.key ? "#ff5f05" : "#e0e0e0" }}
+              style={{ color: activeCategory === cat.key ? "#FFBA08" : "#e0e0e0" }}
             >
               {cat.label}
               {activeCategory === cat.key && (
                 <motion.div
                   layoutId="tab-underline"
                   className="absolute bottom-0 left-0 right-0 h-0.5"
-                  style={{ backgroundColor: "#ff5f05" }}
+                  style={{ backgroundColor: "#FFBA08" }}
                 />
               )}
             </button>
