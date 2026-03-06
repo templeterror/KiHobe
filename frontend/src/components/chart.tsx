@@ -23,14 +23,17 @@ interface ChartProps {
 
 export function PredictionChart({ data, height = 220, predictionType = "binary", choices, lineColor = "#eab308" }: ChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const disposedRef = useRef(false);
 
   useEffect(() => {
+    disposedRef.current = false;
     if (!containerRef.current || data.length === 0) return;
 
     let chart: ReturnType<typeof import("lightweight-charts").createChart> | undefined;
+    const tweens: gsap.core.Tween[] = [];
 
     import("lightweight-charts").then(({ createChart, ColorType, AreaSeries, LineSeries, LineStyle }) => {
-      if (!containerRef.current) return;
+      if (disposedRef.current || !containerRef.current) return;
 
       const crosshairColor = predictionType === "multi_choice" ? "rgba(255,255,255,0.2)" : `${lineColor}4d`;
       const crosshairLabel = predictionType === "multi_choice" ? "#333" : lineColor;
@@ -124,12 +127,13 @@ export function PredictionChart({ data, height = 220, predictionType = "binary",
           series.setData(flatData);
 
           const proxy = { progress: 0 };
-          gsap.to(proxy, {
+          tweens.push(gsap.to(proxy, {
             progress: 1,
             duration: 1.2,
-            delay: i * 0.1, // stagger per line
+            delay: i * 0.1,
             ease: "power2.out",
             onUpdate: () => {
+              if (disposedRef.current) return;
               const animated = finalData.map((d, j) => ({
                 time: d.time,
                 value: flatData[j].value + (d.value - flatData[j].value) * proxy.progress,
@@ -137,9 +141,10 @@ export function PredictionChart({ data, height = 220, predictionType = "binary",
               series.setData(animated);
             },
             onComplete: () => {
+              if (disposedRef.current) return;
               series.setData(finalData);
             },
-          });
+          }));
         });
 
         chart.timeScale().fitContent();
@@ -182,11 +187,12 @@ export function PredictionChart({ data, height = 220, predictionType = "binary",
         chart.timeScale().fitContent();
 
         const proxy = { progress: 0 };
-        gsap.to(proxy, {
+        tweens.push(gsap.to(proxy, {
           progress: 1,
-          duration: 1.5,
-          ease: "steps(14)",
+          duration: 1.0,
+          ease: "power2.out",
           onUpdate: () => {
+            if (disposedRef.current) return;
             const animated = finalData.map((d, j) => ({
               time: d.time,
               value: flatData[j].value + (d.value - flatData[j].value) * proxy.progress,
@@ -194,14 +200,15 @@ export function PredictionChart({ data, height = 220, predictionType = "binary",
             series.setData(animated);
           },
           onComplete: () => {
+            if (disposedRef.current) return;
             series.setData(finalData);
-            gsap.to({ opacity: 0 }, {
+            tweens.push(gsap.to({ opacity: 0 }, {
               opacity: 1,
               duration: 0.6,
               ease: "power1.in",
               onUpdate() {
+                if (disposedRef.current) return;
                 const o = this.targets()[0].opacity;
-                // parse lineColor hex → rgb for area fill
                 const r = parseInt(lineColor.slice(1, 3), 16);
                 const g = parseInt(lineColor.slice(3, 5), 16);
                 const b = parseInt(lineColor.slice(5, 7), 16);
@@ -209,27 +216,28 @@ export function PredictionChart({ data, height = 220, predictionType = "binary",
                   topColor: `rgba(${r},${g},${b},${0.12 * o})`,
                 });
               },
-            });
+            }));
           },
-        });
+        }));
       }
 
       // Fade in the container
-      gsap.fromTo(
+      tweens.push(gsap.fromTo(
         containerRef.current,
         { opacity: 0, y: 8 },
         { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
-      );
+      ));
     });
 
     const ro = new ResizeObserver(() => {
-      if (chart && containerRef.current) {
-        chart.applyOptions({ width: containerRef.current.clientWidth });
-      }
+      if (disposedRef.current || !chart || !containerRef.current) return;
+      chart.applyOptions({ width: containerRef.current.clientWidth });
     });
     ro.observe(containerRef.current);
 
     return () => {
+      disposedRef.current = true;
+      tweens.forEach((t) => t.kill());
       ro.disconnect();
       chart?.remove();
     };
