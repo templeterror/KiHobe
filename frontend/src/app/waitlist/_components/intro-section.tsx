@@ -5,7 +5,7 @@ import { KiHobeLogo } from "@/components/kihobe-logo";
 
 export function IntroSection() {
   return (
-    <section className="relative min-h-[100svh] flex flex-col items-center justify-center px-6 py-20 text-center overflow-hidden">
+    <section className="relative min-h-[100svh] flex flex-col items-center justify-center px-6 pt-20 pb-0 text-center overflow-hidden">
       {/* Logo + badge */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}

@@ -250,7 +250,7 @@ function PredictionCarousel() {
 
 export function HeroSection() {
   return (
-    <section className="relative px-6 py-24 lg:py-32 overflow-hidden">
+    <section className="relative px-6 py-12 lg:py-16 overflow-hidden">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-8 lg:gap-12 items-center">
         {/* Left: copy + form */}
         <div className="flex flex-col gap-8 order-2 lg:order-1">
