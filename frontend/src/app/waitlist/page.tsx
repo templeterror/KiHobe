@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { IntroSection } from "./_components/intro-section";
 import { HeroSection } from "./_components/hero-section";
-import { HowItWorks } from "./_components/how-it-works";
-import { CallToAction } from "./_components/call-to-action";
-import { BottomCta } from "./_components/bottom-cta";
+
+import { DottedSurface } from "@/components/ui/dotted-surface";
 
 export const metadata: Metadata = {
   title: "KiHobe — Bangladesh Prediction Markets",
@@ -13,12 +12,13 @@ export const metadata: Metadata = {
 
 export default function WaitlistPage() {
   return (
-    <main className="bg-background text-foreground min-h-screen">
-      <IntroSection />
-      <HeroSection />
-      <HowItWorks />
-      <CallToAction />
-      <BottomCta />
+    <main className="text-foreground min-h-screen relative">
+      <DottedSurface />
+      <div className="relative z-10">
+        <IntroSection />
+        <HeroSection />
+        <div className="h-[40vh] sm:h-[50vh]" />
+      </div>
     </main>
   );
 }

@@ -5,33 +5,55 @@ import { KiHobeLogo } from "@/components/kihobe-logo";
 
 export function IntroSection() {
   return (
-    <section className="min-h-[100svh] flex flex-col items-center justify-center px-4 py-16 max-w-6xl mx-auto text-center">
+    <section className="relative min-h-[100svh] flex flex-col items-center justify-center px-6 py-20 text-center overflow-hidden">
       {/* Logo + badge */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-        className="flex items-center justify-center gap-3 mb-8"
-      >
-        <KiHobeLogo height={40} />
-        <span className="text-white/30 text-xs border border-white/10 rounded-full px-2 py-0.5">
-          Early Access
-        </span>
-      </motion.div>
-
-      {/* Copy */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        className="relative flex items-center justify-center gap-4 mb-14"
       >
-        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
-          A prediction market built for Bangladesh.
-        </h2>
-        <p className="text-white/50 text-sm sm:text-base leading-relaxed max-w-lg mx-auto">
-          Vote YES or NO on real events — elections, cricket, business — using coins, not cash.
-          No deposits. No real money bets. If you&apos;re right, you enter a lottery for a real bKash prize.
-        </p>
+        <KiHobeLogo height={44} />
+      </motion.div>
+
+      {/* Headline */}
+      <motion.h2
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+        className="relative text-3xl sm:text-4xl lg:text-[3.25rem] font-bold text-white mb-7 tracking-tight leading-[1.12] max-w-xl"
+      >
+        Bangladesh&apos;s First
+        <br />
+        <span className="text-[var(--brand)]">Prediction Market</span>
+      </motion.h2>
+
+      {/* Subtext */}
+      <motion.p
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+        className="relative text-white/50 text-sm sm:text-base lg:text-lg leading-relaxed max-w-lg mx-auto"
+      >
+        You always try to predict the future
+        <br />
+        Now, you get <span className="font-semibold text-white">paid</span> for it
+      </motion.p>
+
+      {/* Scroll indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2, duration: 0.8 }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2"
+      >
+        <motion.div
+          animate={{ y: [0, 6, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="w-5 h-8 rounded-full border border-white/10 flex items-start justify-center pt-1.5"
+        >
+          <div className="w-1 h-1.5 rounded-full bg-white/25" />
+        </motion.div>
       </motion.div>
     </section>
   );

@@ -184,8 +184,8 @@ export function PredictionChart({ data, height = 220, predictionType = "binary",
         const proxy = { progress: 0 };
         gsap.to(proxy, {
           progress: 1,
-          duration: 1.2,
-          ease: "power2.out",
+          duration: 1.5,
+          ease: "steps(14)",
           onUpdate: () => {
             const animated = finalData.map((d, j) => ({
               time: d.time,
