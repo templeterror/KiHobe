@@ -5,9 +5,19 @@ import { HeroSection } from "./_components/hero-section";
 import { DottedSurface } from "@/components/ui/dotted-surface";
 
 export const metadata: Metadata = {
-  title: "KiHobe — Bangladesh Prediction Markets",
-  description:
-    "Predict politics, cricket, and business in Bangladesh. Vote YES or NO, beat the crowd, and win bKash prizes. Join the waitlist.",
+  title: "KiHobe — Bangladesh's First Prediction Market",
+  description: "Get Rewarded for your right predictions",
+  openGraph: {
+    title: "KiHobe — Bangladesh's First Prediction Market",
+    description: "Get Rewarded for your right predictions",
+    images: [{ url: "/og-image.png", width: 1080, height: 1080 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "KiHobe — Bangladesh's First Prediction Market",
+    description: "Get Rewarded for your right predictions",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function WaitlistPage() {
