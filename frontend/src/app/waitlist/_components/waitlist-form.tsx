@@ -10,6 +10,7 @@ interface WaitlistFormProps {
 
 export function WaitlistForm({ size = "default" }: WaitlistFormProps) {
   const [email, setEmail] = useState("");
+  const [website, setWebsite] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -17,9 +18,13 @@ export function WaitlistForm({ size = "default" }: WaitlistFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Please enter a valid email address");
+      return;
+    }
     setLoading(true);
     try {
-      await submitToWaitlist(email);
+      await submitToWaitlist(email, website);
       setSubmitted(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -63,6 +68,16 @@ export function WaitlistForm({ size = "default" }: WaitlistFormProps) {
           className="w-full"
         >
           <div className="flex flex-col sm:flex-row gap-2">
+            <input
+              type="text"
+              name="website"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              autoComplete="off"
+              tabIndex={-1}
+              aria-hidden="true"
+              style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, width: 0 }}
+            />
             <input
               type="email"
               required
