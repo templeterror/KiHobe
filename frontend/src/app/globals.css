@@ -50,13 +50,13 @@
   --radius: 0.75rem;
 
   /* Backgrounds */
-  --background: #0A0C0F;
+  --background: #1A1B1F;
   --foreground: #ffffff;
 
   /* Cards / surfaces */
-  --card: #141619;
+  --card: #222327;
   --card-foreground: #ffffff;
-  --popover: #141619;
+  --popover: #222327;
   --popover-foreground: #ffffff;
 
   /* Brand */
@@ -65,19 +65,19 @@
 
   /* Primary = brand yellow */
   --primary: #FFBA08;
-  --primary-foreground: #0A0C0F;
+  --primary-foreground: #1A1B1F;
 
   /* Secondary = card surface */
-  --secondary: #141619;
+  --secondary: #222327;
   --secondary-foreground: #e0e0e0;
 
   /* Muted */
-  --muted: #141619;
+  --muted: #222327;
   --muted-foreground: #e0e0e0;
 
   /* Accent = brand */
   --accent: #FFBA08;
-  --accent-foreground: #0A0C0F;
+  --accent-foreground: #1A1B1F;
 
   /* YES / NO */
   --yes: #0ac285;
@@ -90,11 +90,11 @@
   --ring: #FFBA08;
 
   /* Sidebar */
-  --sidebar: #141619;
+  --sidebar: #222327;
   --sidebar-foreground: #ffffff;
   --sidebar-primary: #FFBA08;
-  --sidebar-primary-foreground: #0A0C0F;
-  --sidebar-accent: #141619;
+  --sidebar-primary-foreground: #1A1B1F;
+  --sidebar-accent: #222327;
   --sidebar-accent-foreground: #e0e0e0;
   --sidebar-border: rgba(255, 255, 255, 0.1);
   --sidebar-ring: #FFBA08;
