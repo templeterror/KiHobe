@@ -1,7 +1,12 @@
-import { supabase } from "@/lib/supabase";
+export async function submitToWaitlist(email: string, honeypot: string): Promise<void> {
+  const res = await fetch("/api/waitlist", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, website: honeypot }),
+  });
 
-export async function submitToWaitlist(email: string): Promise<void> {
-  const { error } = await supabase.from("waitlist").insert({ email });
-  if (error?.code === "23505") throw new Error("Already on the list");
-  if (error) throw new Error("Could not join waitlist. Try again.");
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Could not join waitlist. Try again.");
+  }
 }
