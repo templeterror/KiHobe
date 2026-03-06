@@ -27,7 +27,7 @@ export default function WaitlistPage() {
       <div className="relative z-10">
         <IntroSection />
         <HeroSection />
-        <div className="h-[40vh] sm:h-[50vh]" />
+        <div className="h-[15vh] sm:h-[20vh]" />
       </div>
     </main>
   );
