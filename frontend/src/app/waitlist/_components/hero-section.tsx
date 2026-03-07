@@ -18,7 +18,7 @@ const lines: { text: string; className?: string; spacing?: string }[] = [
   { text: "(We know our audience hates Shakib al Hasan)", className: "text-xs text-white/40 italic" },
 ];
 
-const prizes = ["500 Tk", "1000 Tk", "5000 Tk"];
+const prizes = ["Gifts", "Cash"];
 
 interface CardData {
   title: string;
