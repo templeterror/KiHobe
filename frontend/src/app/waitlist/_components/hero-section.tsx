@@ -9,7 +9,7 @@ import type { VoteStatPoint } from "@/hooks/use-chart-data";
 
 const lines: { text: string; className?: string; spacing?: string }[] = [
   { text: "From cricket to politics, every tong er adda ends with:" },
-  { text: "\u201CDekhi ki hobe!\u201D", className: "text-sm sm:text-base font-bold text-[var(--brand)]", spacing: "mt-1" },
+  { text: "\u201CDekhi ki hobe!\u201D", className: "text-lg font-bold text-[var(--brand)]", spacing: "mt-1" },
   { text: "But no one tracks the result.", spacing: "mt-4" },
   { text: "KiHobe keeps score." },
   { text: "Make predictions on what you care about.", spacing: "mt-4" },
@@ -64,7 +64,7 @@ function RotatingPrize() {
 
   return (
     <span
-      className="inline-flex items-center justify-center overflow-hidden align-middle rounded-md w-[130px] h-[42px] sm:w-[105px] sm:h-[34px] sm:ml-2"
+      className="inline-flex items-center justify-center overflow-hidden align-middle rounded-md w-[105px] h-[36px] sm:w-[130px] sm:h-[42px] ml-1"
       style={{ background: "linear-gradient(135deg, #FFBA08 0%, #FFD166 100%)" }}
     >
       <AnimatePresence mode="wait">
@@ -74,7 +74,7 @@ function RotatingPrize() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: "-100%", opacity: 0 }}
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="text-[#1A1B1F] font-bold text-2xl sm:text-lg"
+          className="text-[#1A1B1F] font-bold text-lg sm:text-xl"
         >
           {prizes[index]}
         </motion.span>
@@ -89,16 +89,16 @@ function MockPredictionCard({ card }: { card: CardData }) {
   const noPct = 100 - yesPct;
 
   return (
-    <div className="relative bg-[#222327]/80 backdrop-blur-xl border border-white/[0.08] rounded-2xl p-6 flex flex-col gap-5">
+    <div className="relative bg-[#222327]/80 backdrop-blur-xl border border-white/[0.08] rounded-2xl p-6 sm:p-8 flex flex-col gap-5 sm:gap-6">
       <div className="flex items-center justify-between">
-        <span className="flex items-center gap-2 text-xs font-medium text-[var(--no)]">
+        <span className="flex items-center gap-2 text-xs sm:text-sm font-medium text-[var(--no)]">
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--no)] animate-pulse" />
           Live
         </span>
-        <span className="text-[var(--brand)] text-xs font-semibold tracking-wide">{card.prize}</span>
+        <span className="text-[var(--brand)] text-xs sm:text-sm font-semibold tracking-wide">{card.prize}</span>
       </div>
 
-      <h3 className="text-[15px] font-semibold text-white leading-snug tracking-[-0.01em]">{card.title}</h3>
+      <h3 className="text-[15px] sm:text-lg font-semibold text-white leading-snug tracking-[-0.01em]">{card.title}</h3>
 
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
@@ -134,7 +134,7 @@ function MockPredictionCard({ card }: { card: CardData }) {
       </div>
 
       <div className="pt-1">
-        <PredictionChart data={card.data} height={150} />
+        <PredictionChart data={card.data} height={180} />
       </div>
 
       <div className="flex items-center justify-between pt-1 border-t border-white/[0.06]">
@@ -215,7 +215,7 @@ function PredictionCarousel() {
     <div className="flex flex-col gap-4">
       <motion.div
         className="relative overflow-hidden"
-        style={{ minHeight: 420 }}
+        style={{ minHeight: 480 }}
         onPanEnd={handlePanEnd}
       >
         <AnimatePresence initial={false} custom={direction} mode="popLayout">
@@ -265,7 +265,7 @@ export function HeroSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
               transition={{ duration: 0.5, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
-              className={`${line.className ?? "text-sm sm:text-base text-white"} ${line.spacing ?? ""}`}
+              className={`${line.className ?? "text-lg text-white"} ${line.spacing ?? ""}`}
             >
               {line.text}
             </motion.p>
@@ -276,10 +276,9 @@ export function HeroSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.6, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="text-base sm:text-lg font-bold text-white mt-4"
+            className="text-lg sm:text-xl font-bold text-white mt-4"
           >
             <span className="whitespace-nowrap">Winners get rewarded with</span>{" "}
-            <span className="block h-3 sm:hidden" />
             <RotatingPrize />
           </motion.p>
 
