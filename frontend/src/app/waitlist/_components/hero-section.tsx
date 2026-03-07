@@ -98,7 +98,7 @@ function MockPredictionCard({ card }: { card: CardData }) {
         <span className="text-[var(--brand)] text-xs sm:text-sm font-semibold tracking-wide">{card.prize}</span>
       </div>
 
-      <h3 className="text-[15px] sm:text-lg font-semibold text-white leading-snug tracking-[-0.01em]">{card.title}</h3>
+      <h3 className="text-[15px] sm:text-lg font-semibold text-white leading-snug tracking-[-0.01em] min-h-[2.5em] sm:min-h-[2.75em]">{card.title}</h3>
 
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
