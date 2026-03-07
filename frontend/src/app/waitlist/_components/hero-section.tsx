@@ -149,15 +149,15 @@ function MockPredictionCard({ card }: { card: CardData }) {
 
 const slideVariants = {
   enter: (direction: number) => ({
-    y: direction > 0 ? "100%" : "-100%",
+    x: direction > 0 ? "100%" : "-100%",
     opacity: 0,
   }),
   center: {
-    y: 0,
+    x: 0,
     opacity: 1,
   },
   exit: (direction: number) => ({
-    y: direction > 0 ? "-100%" : "100%",
+    x: direction > 0 ? "-100%" : "100%",
     opacity: 0,
   }),
 };
@@ -191,11 +191,11 @@ function PredictionCarousel() {
   }, [next]);
 
   const handlePanEnd = useCallback(
-    (_: unknown, info: { offset: { y: number }; velocity: { y: number } }) => {
-      if (info.velocity.y < -200 || info.offset.y < -50) {
+    (_: unknown, info: { offset: { x: number }; velocity: { x: number } }) => {
+      if (info.velocity.x < -200 || info.offset.x < -50) {
         next();
         resetTimer();
-      } else if (info.velocity.y > 200 || info.offset.y > 50) {
+      } else if (info.velocity.x > 200 || info.offset.x > 50) {
         prev();
         resetTimer();
       }
