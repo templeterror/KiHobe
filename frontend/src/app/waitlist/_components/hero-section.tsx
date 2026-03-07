@@ -7,11 +7,15 @@ import { PredictionChart } from "@/components/chart";
 import { IRAN_CHART_DATA, ABBAS_CHART_DATA, HASINA_CHART_DATA } from "../_lib/mock-data";
 import type { VoteStatPoint } from "@/hooks/use-chart-data";
 
-const lines = [
-  "Everybody makes predictions",
-  "But nobody keeps score",
-  "KiHobe gives you a scoreboard",
-  "\u201CTong er adda\u201D with the entire country",
+const lines: { text: string; className?: string; spacing?: string }[] = [
+  { text: "From cricket to politics, every tong er adda ends with:" },
+  { text: "\u201CDekhi ki hobe!\u201D", className: "text-sm sm:text-base font-bold text-[var(--brand)]", spacing: "mt-1" },
+  { text: "But no one tracks the result.", spacing: "mt-4" },
+  { text: "KiHobe keeps score." },
+  { text: "Make predictions on what you care about.", spacing: "mt-4" },
+  { text: "Compete with others. Share hot takes. Flex your rank." },
+  { text: "No money required to participate.", spacing: "mt-4" },
+  { text: "(We know our audience hates Shakib al Hasan)", className: "text-xs text-white/40 italic" },
 ];
 
 const prizes = ["500 Tk", "1000 Tk", "5000 Tk"];
@@ -253,17 +257,17 @@ export function HeroSection() {
     <section className="relative px-6 py-12 lg:py-16 overflow-hidden">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-8 lg:gap-12 items-center">
         {/* Left: copy + form */}
-        <div className="flex flex-col gap-8 order-2 lg:order-1">
+        <div className="flex flex-col gap-2 order-2 lg:order-1">
           {lines.map((line, i) => (
             <motion.p
               key={i}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="text-lg sm:text-xl text-white"
+              transition={{ duration: 0.5, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
+              className={`${line.className ?? "text-sm sm:text-base text-white"} ${line.spacing ?? ""}`}
             >
-              {line}
+              {line.text}
             </motion.p>
           ))}
 
@@ -272,7 +276,7 @@ export function HeroSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.6, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="text-xl sm:text-2xl font-bold text-white"
+            className="text-base sm:text-lg font-bold text-white mt-4"
           >
             <span className="whitespace-nowrap">Winners get rewarded with</span>{" "}
             <span className="block h-3 sm:hidden" />
@@ -294,9 +298,15 @@ export function HeroSection() {
         </div>
 
         {/* Right: prediction carousel */}
-        <div className="w-full max-w-md mx-auto lg:max-w-none order-1 lg:order-2">
+        <motion.div
+          initial={{ opacity: 0, y: 60 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="w-full max-w-md mx-auto lg:max-w-none order-1 lg:order-2"
+        >
           <PredictionCarousel />
-        </div>
+        </motion.div>
       </div>
     </section>
   );
