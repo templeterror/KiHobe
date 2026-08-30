@@ -19,9 +19,11 @@ interface ChartProps {
   predictionType?: "binary" | "multi_choice";
   choices?: PredictionChoice[] | null;
   lineColor?: string;
+  light?: boolean;
+  interactive?: boolean;
 }
 
-export function PredictionChart({ data, height = 220, predictionType = "binary", choices, lineColor = "#eab308" }: ChartProps) {
+export function PredictionChart({ data, height = 220, predictionType = "binary", choices, lineColor = "#eab308", light = false, interactive = true }: ChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const disposedRef = useRef(false);
 
@@ -32,7 +34,7 @@ export function PredictionChart({ data, height = 220, predictionType = "binary",
     let chart: ReturnType<typeof import("lightweight-charts").createChart> | undefined;
     const tweens: gsap.core.Tween[] = [];
 
-    import("lightweight-charts").then(({ createChart, ColorType, AreaSeries, LineSeries, LineStyle }) => {
+    import("lightweight-charts").then(({ createChart, ColorType, AreaSeries, LineSeries, LineStyle, CrosshairMode }) => {
       if (disposedRef.current || !containerRef.current) return;
 
       const crosshairColor = predictionType === "multi_choice" ? "rgba(255,255,255,0.2)" : `${lineColor}4d`;
@@ -41,21 +43,21 @@ export function PredictionChart({ data, height = 220, predictionType = "binary",
       chart = createChart(containerRef.current, {
         layout: {
           background: { type: ColorType.Solid, color: "transparent" },
-          textColor: "rgba(255,255,255,0.35)",
+          textColor: light ? "rgba(10,10,12,0.5)" : "rgba(255,255,255,0.35)",
           fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
           fontSize: 11,
         },
         grid: {
           vertLines: { visible: false },
-          horzLines: { color: "rgba(255,255,255,0.06)", style: LineStyle.Dotted },
+          horzLines: { color: light ? "rgba(10,10,12,0.12)" : "rgba(255,255,255,0.06)", style: LineStyle.Dotted },
         },
         width: containerRef.current.clientWidth,
-        height,
+        height: containerRef.current.clientHeight || height,
         rightPriceScale: {
           borderVisible: false,
           scaleMargins: { top: 0.08, bottom: 0.08 },
           autoScale: false,
-          entireTextOnly: true,
+          entireTextOnly: (containerRef.current.clientHeight || height) >= 160,
         },
         timeScale: {
           borderVisible: false,
@@ -66,20 +68,26 @@ export function PredictionChart({ data, height = 220, predictionType = "binary",
             return `${d.getDate()} ${d.toLocaleString("en", { month: "short" })}`;
           },
         },
-        crosshair: {
-          vertLine: {
-            color: crosshairColor,
-            width: 1,
-            style: LineStyle.Dashed,
-            labelBackgroundColor: crosshairLabel,
-          },
-          horzLine: {
-            color: crosshairColor,
-            width: 1,
-            style: LineStyle.Dashed,
-            labelBackgroundColor: crosshairLabel,
-          },
-        },
+        crosshair: interactive
+          ? {
+              vertLine: {
+                color: crosshairColor,
+                width: 1,
+                style: LineStyle.Dashed,
+                labelBackgroundColor: crosshairLabel,
+              },
+              horzLine: {
+                color: crosshairColor,
+                width: 1,
+                style: LineStyle.Dashed,
+                labelBackgroundColor: crosshairLabel,
+              },
+            }
+          : {
+              mode: CrosshairMode.Hidden,
+              vertLine: { visible: false },
+              horzLine: { visible: false },
+            },
         handleScale: false,
         handleScroll: false,
       });
@@ -231,7 +239,11 @@ export function PredictionChart({ data, height = 220, predictionType = "binary",
 
     const ro = new ResizeObserver(() => {
       if (disposedRef.current || !chart || !containerRef.current) return;
-      chart.applyOptions({ width: containerRef.current.clientWidth });
+      const el = containerRef.current;
+      chart.applyOptions({
+        width: el.clientWidth,
+        height: el.clientHeight || height,
+      });
     });
     ro.observe(containerRef.current);
 
@@ -241,7 +253,7 @@ export function PredictionChart({ data, height = 220, predictionType = "binary",
       ro.disconnect();
       chart?.remove();
     };
-  }, [data, height, predictionType, choices, lineColor]);
+  }, [data, height, predictionType, choices, lineColor, light, interactive]);
 
-  return <div ref={containerRef} className="w-full" />;
+  return <div ref={containerRef} className="w-full" style={{ height }} />;
 }

@@ -1,311 +1,87 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { WaitlistForm } from "./waitlist-form";
-import { PredictionChart } from "@/components/chart";
-import { IRAN_CHART_DATA, ABBAS_CHART_DATA, HASINA_CHART_DATA } from "../_lib/mock-data";
-import type { VoteStatPoint } from "@/hooks/use-chart-data";
+import { motion } from "framer-motion";
+import { DottedSurface } from "@/components/ui/dotted-surface";
+import { MARKET_CARDS } from "../_lib/mock-data";
+import { MockPredictionCard, yesPctOf } from "./mock-prediction-card";
 
-const lines: { text: string; className?: string; spacing?: string }[] = [
-  { text: "From cricket to politics, every tong er adda ends with:" },
-  { text: "\u201CDekhi ki hobe!\u201D", className: "text-lg font-bold text-[var(--brand)]", spacing: "mt-1" },
-  { text: "But no one tracks the result.", spacing: "mt-4" },
-  { text: "KiHobe keeps score." },
-  { text: "Make predictions on what you care about.", spacing: "mt-4" },
-  { text: "Compete with others. Share hot takes. Flex your rank." },
-  { text: "No money required to participate.", spacing: "mt-4" },
-  { text: "(We know our audience hates Shakib al Hasan)", className: "text-xs text-white/40 italic" },
-];
-
-const prizes = ["Gifts", "Cash"];
-
-interface CardData {
-  title: string;
-  yesCount: number;
-  noCount: number;
-  data: VoteStatPoint[];
-  prize: string;
-}
-
-const cards: CardData[] = [
-  {
-    title: "Will the US send ground troops to Iran before August 2026?",
-    yesCount: 4500,
-    noCount: 1055,
-    data: IRAN_CHART_DATA,
-    prize: "Win 500 Tk",
-  },
-  {
-    title: "Will Mirza Abbas get convicted of 'Chadabaji' during his term?",
-    yesCount: 4000,
-    noCount: 3101,
-    data: ABBAS_CHART_DATA,
-    prize: "Win 1000 Tk",
-  },
-  {
-    title: "Will Sheikh Hasina return to Bangladesh before 2027?",
-    yesCount: 800,
-    noCount: 4500,
-    data: HASINA_CHART_DATA,
-    prize: "Win 5000 Tk",
-  },
-];
-
-function RotatingPrize() {
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % prizes.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <span
-      className="inline-flex items-center justify-center overflow-hidden align-middle rounded-md w-[105px] h-[36px] sm:w-[130px] sm:h-[42px] ml-1"
-      style={{ background: "linear-gradient(135deg, #FFBA08 0%, #FFD166 100%)" }}
-    >
-      <AnimatePresence mode="wait">
-        <motion.span
-          key={index}
-          initial={{ y: "100%", opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: "-100%", opacity: 0 }}
-          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="text-[#1A1B1F] font-bold text-lg sm:text-xl"
-        >
-          {prizes[index]}
-        </motion.span>
-      </AnimatePresence>
-    </span>
-  );
-}
-
-function MockPredictionCard({ card }: { card: CardData }) {
-  const total = card.yesCount + card.noCount;
-  const yesPct = Math.round((card.yesCount / total) * 100);
-  const noPct = 100 - yesPct;
-
-  return (
-    <div className="relative bg-[#222327]/80 backdrop-blur-xl border border-white/[0.08] rounded-2xl p-6 sm:p-8 flex flex-col gap-5 sm:gap-6">
-      <div className="flex items-center justify-between">
-        <span className="flex items-center gap-2 text-xs sm:text-sm font-medium text-[var(--no)]">
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--no)] animate-pulse" />
-          Live
-        </span>
-        <span className="text-[var(--brand)] text-xs sm:text-sm font-semibold tracking-wide">{card.prize}</span>
-      </div>
-
-      <h3 className="text-[15px] sm:text-lg font-semibold text-white leading-snug tracking-[-0.01em] min-h-[2.5em] sm:min-h-[2.75em]">{card.title}</h3>
-
-      <div className="space-y-1.5">
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-white/45 font-medium uppercase tracking-wider">Yes</span>
-          <span className="text-xs font-bold text-[var(--brand)]">{yesPct}%</span>
-        </div>
-        <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${yesPct}%` }}
-            transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-            className="h-full rounded-full"
-            style={{
-              background: "linear-gradient(90deg, #FFBA08, #FFD166)",
-            }}
-          />
-        </div>
-      </div>
-
-      <div className="space-y-1.5">
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-white/45 font-medium uppercase tracking-wider">No</span>
-          <span className="text-xs font-bold text-[var(--no)]">{noPct}%</span>
-        </div>
-        <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${noPct}%` }}
-            transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
-            className="h-full rounded-full bg-[var(--no)]/50"
-          />
-        </div>
-      </div>
-
-      <div className="pt-1">
-        <PredictionChart data={card.data} height={180} />
-      </div>
-
-      <div className="flex items-center justify-between pt-1 border-t border-white/[0.06]">
-        <span className="text-xs text-white/30 font-medium">
-          {total.toLocaleString()} votes
-        </span>
-        <span className="text-xs text-white/20">Updated live</span>
-      </div>
-    </div>
-  );
-}
-
-const slideVariants = {
-  enter: (direction: number) => ({
-    x: direction > 0 ? "100%" : "-100%",
-    opacity: 0,
-  }),
-  center: {
-    x: 0,
-    opacity: 1,
-  },
-  exit: (direction: number) => ({
-    x: direction > 0 ? "-100%" : "100%",
-    opacity: 0,
-  }),
-};
-
-function PredictionCarousel() {
-  const [[activeIndex, direction], setActive] = useState([0, 1]);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const goTo = useCallback((index: number) => {
-    setActive(([prev]) => [index, index > prev ? 1 : -1]);
-  }, []);
-
-  const next = useCallback(() => {
-    setActive(([prev]) => [(prev + 1) % cards.length, 1]);
-  }, []);
-
-  const prev = useCallback(() => {
-    setActive(([prev]) => [(prev - 1 + cards.length) % cards.length, -1]);
-  }, []);
-
-  const resetTimer = useCallback(() => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(next, 3000);
-  }, [next]);
-
-  useEffect(() => {
-    timerRef.current = setInterval(next, 3000);
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [next]);
-
-  const handlePanEnd = useCallback(
-    (_: unknown, info: { offset: { x: number }; velocity: { x: number } }) => {
-      if (info.velocity.x < -200 || info.offset.x < -50) {
-        next();
-        resetTimer();
-      } else if (info.velocity.x > 200 || info.offset.x > 50) {
-        prev();
-        resetTimer();
-      }
-    },
-    [next, prev, resetTimer],
-  );
-
-  const handleDotClick = useCallback(
-    (index: number) => {
-      goTo(index);
-      resetTimer();
-    },
-    [goTo, resetTimer],
-  );
-
-  return (
-    <div className="flex flex-col gap-4">
-      <motion.div
-        className="relative overflow-hidden"
-        style={{ minHeight: 480 }}
-        onPanEnd={handlePanEnd}
-      >
-        <AnimatePresence initial={false} custom={direction} mode="popLayout">
-          <motion.div
-            key={activeIndex}
-            custom={direction}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <MockPredictionCard card={cards[activeIndex]} />
-          </motion.div>
-        </AnimatePresence>
-      </motion.div>
-
-      {/* Dot indicators */}
-      <div className="flex justify-center gap-2">
-        {cards.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => handleDotClick(i)}
-            aria-label={`Go to prediction ${i + 1}`}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              i === activeIndex
-                ? "w-4 bg-[var(--brand)]"
-                : "w-2 bg-white/20 hover:bg-white/30"
-            }`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
+const featured = MARKET_CARDS[0];
+const tickerItems = MARKET_CARDS.map((card) => {
+  const yes = yesPctOf(card);
+  return `${card.category}  ·  ${card.title}  ·  YES ${yes}%  ·  NO ${100 - yes}%`;
+});
 
 export function HeroSection() {
   return (
-    <section className="relative px-6 py-12 lg:py-16 overflow-hidden">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-8 lg:gap-12 items-center">
-        {/* Left: copy + form */}
-        <div className="flex flex-col gap-2 order-2 lg:order-1">
-          {lines.map((line, i) => (
-            <motion.p
-              key={i}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.5, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
-              className={`${line.className ?? "text-lg text-white"} ${line.spacing ?? ""}`}
-            >
-              {line.text}
-            </motion.p>
-          ))}
+    <section
+      id="top"
+      className="relative flex min-h-[100svh] flex-col overflow-hidden pt-16"
+    >
+      <DottedSurface tone="light" className="!absolute inset-0 z-0 opacity-50 sm:opacity-80" />
+
+      <div className="relative z-10 mx-auto grid w-full max-w-6xl flex-1 grid-cols-1 items-center gap-10 px-5 py-12 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:gap-8 lg:py-16">
+        <div className="relative">
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            className="font-odds mb-6 text-[11px] uppercase tracking-[0.28em] text-[var(--brand-ink)] sm:text-xs"
+          >
+            Bangladesh
+          </motion.p>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            className="font-display text-[clamp(3.25rem,12vw,7.5rem)] font-extrabold leading-[0.88] tracking-[-0.04em] text-[var(--landing-ink)] [font-stretch:extra-condensed]"
+          >
+            Dekhi&nbsp;ki
+            <br />
+            <span className="text-[var(--brand-ink)]">hobe.</span>
+          </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.6, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="text-lg sm:text-xl font-bold text-white mt-4"
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            className="font-editorial mt-8 max-w-md text-lg leading-relaxed text-[var(--landing-muted)] sm:text-xl"
           >
-            <span className="whitespace-nowrap">Winners get rewarded with</span>{" "}
-            <RotatingPrize />
+            Bangladesh&apos;s first prediction market.
+            <span className="mt-1 block italic text-[var(--landing-faint)]">
+              The scoreboard for every argument you already have.
+            </span>
           </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-4"
-          >
-            <p className="text-white/40 text-sm mb-4">Join the waitlist for early access</p>
-            <div className="max-w-lg">
-              <WaitlistForm size="large" />
-            </div>
-          </motion.div>
         </div>
 
-        {/* Right: prediction carousel */}
         <motion.div
-          initial={{ opacity: 0, y: 60 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="w-full max-w-md mx-auto lg:max-w-none order-1 lg:order-2"
+          initial={{ opacity: 0, y: 48, rotate: 0 }}
+          animate={{ opacity: 1, y: 0, rotate: 1.4 }}
+          transition={{ duration: 0.8, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+          className="relative z-10 mx-auto w-full max-w-md lg:mx-0 lg:-ml-6 lg:max-w-none"
         >
-          <PredictionCarousel />
+          <MockPredictionCard card={featured} featured />
         </motion.div>
+      </div>
+
+      <div className="relative z-10 border-t border-[var(--landing-line)] bg-[var(--landing-bg-alt)]/80">
+        <div className="overflow-hidden py-3">
+          <div className="landing-ticker-track flex w-max gap-0">
+            {[0, 1].map((copy) => (
+              <div key={copy} className="flex shrink-0">
+                {tickerItems.map((item, i) => (
+                  <span
+                    key={`${copy}-${i}`}
+                    className="font-odds flex items-center px-6 text-[11px] uppercase tracking-[0.18em] text-[var(--landing-faint)]"
+                  >
+                    <span className="mr-6 inline-block h-1 w-1 rounded-full bg-[var(--brand)]" />
+                    {item}
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

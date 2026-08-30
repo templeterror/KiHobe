@@ -3,9 +3,11 @@ import { cn } from '@/lib/utils';
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-type DottedSurfaceProps = Omit<React.ComponentProps<'div'>, 'ref'>;
+type DottedSurfaceProps = Omit<React.ComponentProps<'div'>, 'ref'> & {
+    tone?: "dark" | "light";
+};
 
-export function DottedSurface({ className, children, ...props }: DottedSurfaceProps) {
+export function DottedSurface({ className, children, tone = "dark", ...props }: DottedSurfaceProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const sceneRef = useRef<{
         scene: THREE.Scene;
@@ -25,7 +27,8 @@ export function DottedSurface({ className, children, ...props }: DottedSurfacePr
 
         // Scene setup
         const scene = new THREE.Scene();
-        scene.fog = new THREE.Fog(0x000000, 2000, 10000);
+        const fogColor = tone === "light" ? 0xf5f7f4 : 0x000000;
+        scene.fog = new THREE.Fog(fogColor, 2000, 10000);
 
         const camera = new THREE.PerspectiveCamera(
             60,
@@ -51,10 +54,10 @@ export function DottedSurface({ className, children, ...props }: DottedSurfacePr
 
         const geometry = new THREE.BufferGeometry();
 
-        // Brand yellow: #FFBA08 → RGB normalized
-        const r = 255 / 255;
-        const g = 186 / 255;
-        const b = 8 / 255;
+        // Dark green on light (#014737), gold on dark (#FFBA08)
+        const r = tone === "light" ? 1 / 255 : 255 / 255;
+        const g = tone === "light" ? 71 / 255 : 186 / 255;
+        const b = tone === "light" ? 55 / 255 : 8 / 255;
 
         for (let ix = 0; ix < AMOUNTX; ix++) {
             for (let iy = 0; iy < AMOUNTY; iy++) {
@@ -77,7 +80,7 @@ export function DottedSurface({ className, children, ...props }: DottedSurfacePr
             size: 8,
             vertexColors: true,
             transparent: true,
-            opacity: 0.8,
+            opacity: tone === "light" ? 0.85 : 0.8,
             sizeAttenuation: true,
         });
 
@@ -153,7 +156,7 @@ export function DottedSurface({ className, children, ...props }: DottedSurfacePr
                 }
             }
         };
-    }, []);
+    }, [tone]);
 
     return (
         <div

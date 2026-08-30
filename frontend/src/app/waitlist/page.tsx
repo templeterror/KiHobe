@@ -1,34 +1,45 @@
 import type { Metadata } from "next";
-import { IntroSection } from "./_components/intro-section";
+import { LandingNav } from "./_components/landing-nav";
 import { HeroSection } from "./_components/hero-section";
-
-import { DottedSurface } from "@/components/ui/dotted-surface";
+import { AddaSection } from "./_components/adda-section";
+import { HowSection } from "./_components/how-section";
+import { EdgeSection } from "./_components/edge-section";
+import { MarketsSection } from "./_components/markets-section";
+import { ScoreboardSection } from "./_components/scoreboard-section";
+import { LandingFooter } from "./_components/landing-footer";
 
 export const metadata: Metadata = {
-  title: "KiHobe — Bangladesh's First Prediction Market",
-  description: "Get Rewarded for your right predictions",
+  title: "KiHobe — Bangladesh's first prediction market",
+  description:
+    "Every adda ends with dekhi ki hobe. KiHobe keeps score — predict cricket, politics, and the rest, and get rewarded when you're right.",
   openGraph: {
-    title: "KiHobe — Bangladesh's First Prediction Market",
-    description: "Get Rewarded for your right predictions",
+    title: "KiHobe — Bangladesh's first prediction market",
+    description:
+      "Every adda ends with dekhi ki hobe. KiHobe keeps score — predict cricket, politics, and the rest, and get rewarded when you're right.",
     images: [{ url: "/og-image.png", width: 1080, height: 1080 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "KiHobe — Bangladesh's First Prediction Market",
-    description: "Get Rewarded for your right predictions",
+    title: "KiHobe — Bangladesh's first prediction market",
+    description:
+      "Every adda ends with dekhi ki hobe. KiHobe keeps score — predict cricket, politics, and the rest, and get rewarded when you're right.",
     images: ["/og-image.png"],
   },
 };
 
 export default function WaitlistPage() {
   return (
-    <main className="text-foreground min-h-screen relative">
-      <DottedSurface />
-      <div className="relative z-10">
-        <IntroSection />
+    <div className="landing">
+      <LandingNav />
+      <main>
         <HeroSection />
-        <div className="h-[15vh] sm:h-[20vh]" />
-      </div>
-    </main>
+        <AddaSection />
+        <HowSection />
+        <EdgeSection />
+        <MarketsSection />
+        <ScoreboardSection />
+      </main>
+      <LandingFooter />
+    </div>
   );
 }

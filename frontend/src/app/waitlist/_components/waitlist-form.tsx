@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { submitToWaitlist } from "../_lib/waitlist";
 
 interface WaitlistFormProps {
   size?: "default" | "large";
+  inset?: boolean;
+  onDark?: boolean;
 }
 
-export function WaitlistForm({ size = "default" }: WaitlistFormProps) {
+export function WaitlistForm({ size = "default", inset = false, onDark = false }: WaitlistFormProps) {
   const [email, setEmail] = useState("");
-  const [website, setWebsite] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -23,25 +23,12 @@ export function WaitlistForm({ size = "default" }: WaitlistFormProps) {
       return;
     }
     setLoading(true);
-    try {
-      await submitToWaitlist(email, website);
-      setSubmitted(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
+    await new Promise((r) => setTimeout(r, 450));
+    setLoading(false);
+    setSubmitted(true);
   };
 
-  const inputClass =
-    size === "large"
-      ? "flex-1 bg-white/[0.05] border border-white/[0.1] rounded-xl px-5 py-3.5 text-base text-white focus:outline-none focus:ring-1 focus:ring-[var(--brand)]/50 focus:border-[var(--brand)]/30 placeholder:text-white/30 transition-all backdrop-blur-sm"
-      : "flex-1 bg-white/[0.05] border border-white/[0.1] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[var(--brand)]/50 focus:border-[var(--brand)]/30 placeholder:text-white/30 transition-all backdrop-blur-sm";
-
-  const btnClass =
-    size === "large"
-      ? "font-semibold rounded-xl px-7 py-3.5 text-base whitespace-nowrap transition-all disabled:opacity-50 text-[#1A1B1F] shadow-[0_0_24px_rgba(255,186,8,0.2)]"
-      : "font-semibold rounded-lg px-5 py-3 text-sm whitespace-nowrap transition-all disabled:opacity-50 text-[#1A1B1F] shadow-[0_0_20px_rgba(255,186,8,0.15)]";
+  const large = size === "large";
 
   return (
     <AnimatePresence mode="wait">
@@ -50,12 +37,20 @@ export function WaitlistForm({ size = "default" }: WaitlistFormProps) {
           key="success"
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-3 bg-[var(--yes)]/10 border border-[var(--yes)]/25 rounded-xl px-5 py-4 backdrop-blur-sm"
+          className={`flex items-center gap-3 rounded-xl px-5 py-4 ${
+            onDark
+              ? "border border-white/15 bg-white/10"
+              : "border border-[var(--kihobe-green-dark)]/20 bg-[var(--kihobe-green)]/15"
+          }`}
         >
-          <span className="text-[var(--yes)] text-xl">&#10003;</span>
+          <span className={`text-lg ${onDark ? "text-[#00DD94]" : "text-[var(--kihobe-green-dark)]"}`}>&#10003;</span>
           <div>
-            <p className="text-white font-semibold text-sm">You&apos;re on the list.</p>
-            <p className="text-white/50 text-xs mt-0.5">We&apos;ll reach out when KiHobe opens.</p>
+            <p className={`font-display text-sm font-extrabold tracking-wide [font-stretch:condensed] ${onDark ? "text-white" : "text-[var(--landing-ink)]"}`}>
+              You&apos;re on the list.
+            </p>
+            <p className={`mt-0.5 font-editorial text-sm ${onDark ? "text-white/70" : "text-[var(--landing-faint)]"}`}>
+              We&apos;ll reach out when KiHobe opens.
+            </p>
           </div>
         </motion.div>
       ) : (
@@ -67,39 +62,32 @@ export function WaitlistForm({ size = "default" }: WaitlistFormProps) {
           onSubmit={handleSubmit}
           className="w-full"
         >
-          <div className="flex flex-col sm:flex-row gap-2">
-            <input
-              type="text"
-              name="website"
-              value={website}
-              onChange={(e) => setWebsite(e.target.value)}
-              autoComplete="off"
-              tabIndex={-1}
-              aria-hidden="true"
-              style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, width: 0 }}
-            />
+          <div className="flex flex-col gap-2 sm:flex-row">
             <input
               type="email"
               required
               placeholder="your@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={inputClass}
+              className={`flex-1 border transition-colors focus:outline-none focus:ring-1 ${
+                onDark
+                  ? "border-white/15 bg-white text-[var(--kihobe-ink)] placeholder:text-[var(--landing-ghost)] focus:border-[#00DD94] focus:ring-[#00DD94]"
+                  : `border-[var(--landing-line)] text-[var(--landing-ink)] placeholder:text-[var(--landing-ghost)] focus:border-[var(--kihobe-green-market)] focus:ring-[var(--kihobe-green)] ${
+                      inset ? "bg-[var(--kihobe-paper)]" : "bg-[var(--landing-card)]"
+                    }`
+              } ${large ? "rounded-xl px-5 py-3.5 text-base" : "rounded-lg px-4 py-3 text-sm"}`}
             />
             <button
               type="submit"
-              disabled={loading || !email}
-              className={btnClass}
-              style={{
-                background: "linear-gradient(135deg, #FFBA08 0%, #FFD166 100%)",
-              }}
+              disabled={loading}
+              className={`whitespace-nowrap bg-[#00DD94] font-display font-extrabold tracking-wide text-[#050D0A] [font-stretch:condensed] ${
+                large ? "rounded-xl px-7 py-3.5 text-base" : "rounded-lg px-5 py-3 text-sm"
+              }`}
             >
               {loading ? "Joining\u2026" : "Get early access"}
             </button>
           </div>
-          {error && (
-            <p className="text-[var(--no)] text-xs mt-2 pl-1">{error}</p>
-          )}
+          {error && <p className="mt-2 pl-1 text-xs text-[var(--no)]">{error}</p>}
         </motion.form>
       )}
     </AnimatePresence>

@@ -28,7 +28,7 @@ export const IRAN_CHART_DATA: VoteStatPoint[] = [
   // Troop mobilization confirmed — final push
   { recorded_at: "2026-02-25T06:00:00+00:00", yes_count: 2800, no_count: 420, choice_counts: null },
   { recorded_at: "2026-02-28T06:00:00+00:00", yes_count: 3600, no_count: 680, choice_counts: null },
-  { recorded_at: "2026-03-03T18:00:00+00:00", yes_count: 4500, no_count: 1155, choice_counts: null },
+  { recorded_at: "2026-03-03T18:00:00+00:00", yes_count: 4500, no_count: 1055, choice_counts: null },
 ];
 
 // Mirza Abbas convicted — oscillates wildly between 55-75% as legal proceedings
@@ -92,4 +92,75 @@ export const HASINA_CHART_DATA: VoteStatPoint[] = [
   { recorded_at: "2026-02-23T06:00:00+00:00", yes_count: 380, no_count: 1800, choice_counts: null },
   { recorded_at: "2026-02-27T06:00:00+00:00", yes_count: 550, no_count: 2800, choice_counts: null },
   { recorded_at: "2026-03-03T18:00:00+00:00", yes_count: 800, no_count: 4500, choice_counts: null },
+];
+
+// Bangladesh vs India T20 — opens as an underdog, spikes after a famous
+// collapse, then settles into a noisy 40-ish as the series unfolds.
+export const CRICKET_CHART_DATA: VoteStatPoint[] = [
+  { recorded_at: "2026-01-01T06:00:00+00:00", yes_count: 8, no_count: 14, choice_counts: null },
+  { recorded_at: "2026-01-04T06:00:00+00:00", yes_count: 16, no_count: 28, choice_counts: null },
+  { recorded_at: "2026-01-08T06:00:00+00:00", yes_count: 24, no_count: 48, choice_counts: null },
+  { recorded_at: "2026-01-12T06:00:00+00:00", yes_count: 38, no_count: 62, choice_counts: null },
+  { recorded_at: "2026-01-15T06:00:00+00:00", yes_count: 72, no_count: 70, choice_counts: null },
+  { recorded_at: "2026-01-16T18:00:00+00:00", yes_count: 110, no_count: 74, choice_counts: null },
+  { recorded_at: "2026-01-19T06:00:00+00:00", yes_count: 128, no_count: 96, choice_counts: null },
+  { recorded_at: "2026-01-22T06:00:00+00:00", yes_count: 142, no_count: 138, choice_counts: null },
+  { recorded_at: "2026-01-26T06:00:00+00:00", yes_count: 168, no_count: 190, choice_counts: null },
+  { recorded_at: "2026-01-30T06:00:00+00:00", yes_count: 210, no_count: 250, choice_counts: null },
+  { recorded_at: "2026-02-04T06:00:00+00:00", yes_count: 280, no_count: 310, choice_counts: null },
+  { recorded_at: "2026-02-09T06:00:00+00:00", yes_count: 360, no_count: 420, choice_counts: null },
+  { recorded_at: "2026-02-14T06:00:00+00:00", yes_count: 490, no_count: 580, choice_counts: null },
+  { recorded_at: "2026-02-19T06:00:00+00:00", yes_count: 640, no_count: 790, choice_counts: null },
+  { recorded_at: "2026-02-24T06:00:00+00:00", yes_count: 880, no_count: 1120, choice_counts: null },
+  { recorded_at: "2026-03-01T06:00:00+00:00", yes_count: 1240, no_count: 1680, choice_counts: null },
+  { recorded_at: "2026-03-03T18:00:00+00:00", yes_count: 1840, no_count: 2610, choice_counts: null },
+];
+
+export interface MarketCardData {
+  id: string;
+  title: string;
+  category: string;
+  yesCount: number;
+  noCount: number;
+  data: VoteStatPoint[];
+  prize: string;
+}
+
+export const MARKET_CARDS: MarketCardData[] = [
+  {
+    id: "cricket",
+    title: "Will Bangladesh beat India in the next T20 series?",
+    category: "Cricket",
+    yesCount: 1840,
+    noCount: 2610,
+    data: CRICKET_CHART_DATA,
+    prize: "Win 2000 Tk",
+  },
+  {
+    id: "iran",
+    title: "Will the US send ground troops to Iran before August 2026?",
+    category: "International",
+    yesCount: 4500,
+    noCount: 1055,
+    data: IRAN_CHART_DATA,
+    prize: "Win 500 Tk",
+  },
+  {
+    id: "abbas",
+    title: "Will Mirza Abbas get convicted of 'Chadabaji' during his term?",
+    category: "Politics",
+    yesCount: 4000,
+    noCount: 3101,
+    data: ABBAS_CHART_DATA,
+    prize: "Win 1000 Tk",
+  },
+  {
+    id: "hasina",
+    title: "Will Sheikh Hasina return to Bangladesh before 2027?",
+    category: "Politics",
+    yesCount: 800,
+    noCount: 4500,
+    data: HASINA_CHART_DATA,
+    prize: "Win 5000 Tk",
+  },
 ];
